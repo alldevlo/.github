@@ -1,0 +1,112 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "permissions": {
+        "allow": [
+            "Skill",
+            "Bash(git add:*)",
+            "Bash(git commit:*)",
+            "Bash(git push:*)",
+            "Bash(cat CLAUDE.md)",
+            "Bash(cat .memory/*)",
+            "Bash(ls .memory/)",
+            "Bash(wc -l CLAUDE.md)",
+            "Bash(mkdir -p .memory*)",
+            "Write(CLAUDE.md)",
+            "Write(.memory/*)",
+            "Edit(CLAUDE.md)",
+            "Edit(.memory/*)"
+        ]
+    },
+    "hooks": {
+        "Stop": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/stop-hook-git-check.sh"
+                    }
+                ]
+            }
+        ],
+        "PreCompact": [
+            {
+                "matcher": "auto",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/pre-compact.sh"
+                    }
+                ]
+            },
+            {
+                "matcher": "manual",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/pre-compact.sh"
+                    }
+                ]
+            }
+        ],
+        "PostCompact": [
+            {
+                "matcher": "auto",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/post-compact.sh"
+                    }
+                ]
+            },
+            {
+                "matcher": "manual",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/post-compact.sh"
+                    }
+                ]
+            }
+        ],
+        "SessionStart": [
+            {
+                "matcher": "startup",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/session-start.sh startup"
+                    }
+                ]
+            },
+            {
+                "matcher": "resume",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/session-start.sh resume"
+                    }
+                ]
+            },
+            {
+                "matcher": "compact",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/session-start.sh compact"
+                    }
+                ]
+            }
+        ],
+        "SessionEnd": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash ~/.claude/hooks/session-end.sh"
+                    }
+                ]
+            }
+        ]
+    }
+}
