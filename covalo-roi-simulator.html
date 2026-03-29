@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devlo AI-OPS - ROI Simulator</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --accent: #4f46e5;
+            --accent-light: #6366f1;
+            --green: #10b981;
+            --green-dark: #059669;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --red: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        header .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Global settings */
+        .global-settings {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .setting-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .setting-card label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .setting-card input {
+            width: 100%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border: none;
+            outline: none;
+            color: var(--accent);
+            background: transparent;
+        }
+
+        .setting-card .unit {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Category sections */
+        .category {
+            margin-bottom: 2rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .category-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+        }
+
+        /* Automation rows */
+        .automation-table {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .automation-row {
+            display: grid;
+            grid-template-columns: 30px 1fr 120px 100px 100px 110px;
+            align-items: center;
+            padding: 0.85rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            gap: 0.75rem;
+        }
+
+        .automation-row:last-child { border-bottom: none; }
+
+        .automation-row:hover { background: #f1f5f9; }
+
+        .automation-row.disabled {
+            opacity: 0.4;
+        }
+
+        .automation-row.header {
+            background: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .automation-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .auto-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .auto-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+
+        .auto-type-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .badge-skill { background: #dbeafe; color: #1d4ed8; }
+        .badge-command { background: #fef3c7; color: #92400e; }
+        .badge-script { background: #d1fae5; color: #065f46; }
+        .badge-workflow { background: #ede9fe; color: #5b21b6; }
+
+        .num-input {
+            width: 70px;
+            padding: 0.35rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            outline: none;
+            transition: border 0.15s;
+        }
+
+        .num-input:focus { border-color: var(--accent); }
+
+        .time-saved {
+            font-weight: 700;
+            color: var(--green-dark);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        /* Summary dashboard */
+        .summary {
+            background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            color: white;
+            margin-top: 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.7;
+            margin-bottom: 0.3rem;
+        }
+
+        .summary-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .summary-value.green { color: var(--green); }
+
+        .summary-sub {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-top: 0.15rem;
+        }
+
+        /* Footer note */
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .automation-row {
+                grid-template-columns: 30px 1fr;
+                gap: 0.5rem;
+            }
+            .automation-row .col-freq,
+            .automation-row .col-time,
+            .automation-row .col-type,
+            .automation-row .time-saved {
+                grid-column: 2;
+            }
+            .automation-row.header { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulateur ROI - Devlo AI-OPS</h1>
+        <p class="subtitle">Estimez le temps et l'argent que l'IA vous fait economiser chaque mois</p>
+    </header>
+
+    <!-- Global settings -->
+    <div class="global-settings">
+        <div class="setting-card">
+            <label>Cout horaire moyen</label>
+            <div>
+                <input type="number" id="hourlyRate" value="85" min="0" step="5" oninput="recalculate()">
+                <span class="unit">CHF / heure</span>
+            </div>
+        </div>
+        <div class="setting-card">
+            <label>Jours de travail / mois</label>
+            <div>
+                <input type="number" id="workDays" value="21" min="1" max="31" oninput="recalculate()">
+                <span class="unit">jours</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Automations list -->
+    <div id="automations-container"></div>
+
+    <!-- Summary -->
+    <div class="summary" id="summary">
+        <div class="summary-item">
+            <div class="summary-label">Automations actives</div>
+            <div class="summary-value" id="sum-active">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Heures economisees / mois</div>
+            <div class="summary-value green" id="sum-hours">0h</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Jours economises / mois</div>
+            <div class="summary-value green" id="sum-days">0</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Economie mensuelle</div>
+            <div class="summary-value green" id="sum-money">0 CHF</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">Economie annuelle</div>
+            <div class="summary-value green" id="sum-annual">0 CHF</div>
+        </div>
+    </div>
+
+    <p class="footer-note">
+        Les estimations de temps sont basees sur des benchmarks internes Devlo.
+        Ajustez les valeurs selon votre realite operationnelle.
+    </p>
+</div>
+
+<script>
+const automations = [
+    // === SKILLS ===
+    {
+        id: 'email-composer',
+        name: 'Email Composer',
+        desc: 'Redaction d\'emails outbound personnalises avec guidelines de copywriting',
+        type: 'skill',
+        category: 'Ventes & Outbound',
+        defaultFreq: 20,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'prospect-researcher',
+        name: 'Prospect Researcher',
+        desc: 'Recherche approfondie sur un prospect ou une entreprise avant contact',
+        type: 'skill',
+        category: 'Ventes & Outbound',
+        defaultFreq: 15,
+        defaultMinutes: 45,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'campaign-analyst',
+        name: 'Campaign Analyst',
+        desc: 'Analyse de performance des campagnes de lead generation avec recommandations',
+        type: 'skill',
+        category: 'Ventes & Outbound',
+        defaultFreq: 4,
+        defaultMinutes: 60,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'pipeline-advisor',
+        name: 'Pipeline Advisor',
+        desc: 'Conseil sur le pipeline commercial : priorites, next steps, deals a risque',
+        type: 'skill',
+        category: 'Ventes & Outbound',
+        defaultFreq: 8,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'leadgen-campaign-qa',
+        name: 'Leadgen Campaign QA',
+        desc: 'Checklist qualite avant lancement d\'une campagne de prospection',
+        type: 'skill',
+        category: 'Ventes & Outbound',
+        defaultFreq: 3,
+        defaultMinutes: 40,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'prompt-engineer',
+        name: 'Prompt Engineer',
+        desc: 'Creation et structuration de prompts pour workflows IA internes',
+        type: 'skill',
+        category: 'Operations & IA',
+        defaultFreq: 4,
+        defaultMinutes: 45,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'prompt-optimizer',
+        name: 'Prompt Optimizer',
+        desc: 'Optimisation de prompts existants pour ameliorer la qualite des outputs',
+        type: 'skill',
+        category: 'Operations & IA',
+        defaultFreq: 4,
+        defaultMinutes: 30,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'client-onboarder',
+        name: 'Client Onboarder',
+        desc: 'Onboarding structure d\'un nouveau client : dossier contexte, strategie, equipe',
+        type: 'skill',
+        category: 'Gestion de clients',
+        defaultFreq: 1,
+        defaultMinutes: 120,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'scaffold-business',
+        name: 'Scaffold Business Context',
+        desc: 'Generation automatique de la fiche business d\'un nouveau projet/client',
+        type: 'skill',
+        category: 'Operations & IA',
+        defaultFreq: 1,
+        defaultMinutes: 60,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'create-aios',
+        name: 'Create AI-OPS Instance',
+        desc: 'Scaffolding complet d\'une nouvelle instance AI-OPS pour une agence',
+        type: 'skill',
+        category: 'Operations & IA',
+        defaultFreq: 0,
+        defaultMinutes: 240,
+        relevantForCovalo: false,
+        enabled: false
+    },
+
+    // === COMMANDS ===
+    {
+        id: 'devlo-proposal-draft',
+        name: 'Proposal Draft',
+        desc: 'Generation automatique d\'un devis/proposition commerciale structure',
+        type: 'command',
+        category: 'Ventes & Outbound',
+        defaultFreq: 3,
+        defaultMinutes: 90,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-prospect-research',
+        name: 'Prospect Research (deep)',
+        desc: 'Recherche approfondie sur une entreprise cible avec brief actionable',
+        type: 'command',
+        category: 'Ventes & Outbound',
+        defaultFreq: 10,
+        defaultMinutes: 40,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-optimize-outbound',
+        name: 'Optimize Outbound',
+        desc: 'Optimisation des sequences email outbound basee sur les donnees de reponse',
+        type: 'command',
+        category: 'Ventes & Outbound',
+        defaultFreq: 2,
+        defaultMinutes: 60,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-campaign-review',
+        name: 'Campaign Review',
+        desc: 'Revue de performance des campagnes actives avec recommandations',
+        type: 'command',
+        category: 'Ventes & Outbound',
+        defaultFreq: 4,
+        defaultMinutes: 45,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-daily-briefing',
+        name: 'Daily Briefing',
+        desc: 'Briefing quotidien : metriques, taches prioritaires, alertes',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 21,
+        defaultMinutes: 20,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-weekly-report',
+        name: 'Weekly Report',
+        desc: 'Rapport hebdomadaire de performance et d\'activite',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 4,
+        defaultMinutes: 45,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-weekly-review',
+        name: 'Weekly Review',
+        desc: 'Revue operationnelle hebdomadaire : campagnes, pipeline, taches',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 4,
+        defaultMinutes: 40,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'client-inbox',
+        name: 'Client Inbox',
+        desc: 'Triage de la boite de reception client + brouillons de reponses',
+        type: 'command',
+        category: 'Gestion de clients',
+        defaultFreq: 21,
+        defaultMinutes: 15,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-client-check-in',
+        name: 'Client Check-in',
+        desc: 'Preparation d\'un point client : resume, KPIs, sujets a aborder',
+        type: 'command',
+        category: 'Gestion de clients',
+        defaultFreq: 4,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'devlo-onboarding-plan',
+        name: 'Onboarding Plan',
+        desc: 'Creation d\'un plan d\'onboarding structure pour un nouveau client',
+        type: 'command',
+        category: 'Gestion de clients',
+        defaultFreq: 1,
+        defaultMinutes: 60,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'client-sync',
+        name: 'Client Sync',
+        desc: 'Synchronisation des donnees client depuis CRM/Supabase vers le repo',
+        type: 'command',
+        category: 'Operations & IA',
+        defaultFreq: 4,
+        defaultMinutes: 20,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'client-prime',
+        name: 'Client Prime',
+        desc: 'Chargement du contexte complet d\'un client avant session de travail',
+        type: 'command',
+        category: 'Operations & IA',
+        defaultFreq: 10,
+        defaultMinutes: 10,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'devlo-prime',
+        name: 'Devlo Prime',
+        desc: 'Initialisation de l\'agent IA avec le contexte organisationnel complet',
+        type: 'command',
+        category: 'Operations & IA',
+        defaultFreq: 5,
+        defaultMinutes: 10,
+        relevantForCovalo: false,
+        enabled: false
+    },
+
+    // === SCRIPTS / WORKFLOWS ===
+    {
+        id: 'analyze-replies',
+        name: 'Analyze Replies',
+        desc: 'Analyse automatique des reponses email : categorisation, sentiment, next steps',
+        type: 'script',
+        category: 'Ventes & Outbound',
+        defaultFreq: 4,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'fetch-hubspot-outcomes',
+        name: 'HubSpot Outcomes Sync',
+        desc: 'Recuperation automatique des resultats deals depuis HubSpot',
+        type: 'script',
+        category: 'Operations & IA',
+        defaultFreq: 4,
+        defaultMinutes: 15,
+        relevantForCovalo: false,
+        enabled: false
+    },
+    {
+        id: 'n8n-error-logger',
+        name: 'n8n Error Logger',
+        desc: 'Monitoring automatise des erreurs dans les workflows d\'automatisation',
+        type: 'workflow',
+        category: 'Operations & IA',
+        defaultFreq: 21,
+        defaultMinutes: 5,
+        relevantForCovalo: false,
+        enabled: false
+    }
+];
+
+// Group by category
+function getCategories() {
+    const cats = {};
+    automations.forEach(a => {
+        if (!cats[a.category]) cats[a.category] = [];
+        cats[a.category].push(a);
+    });
+    return cats;
+}
+
+const categoryOrder = ['Ventes & Outbound', 'Reporting & Suivi', 'Gestion de clients', 'Operations & IA'];
+
+function renderAutomations() {
+    const container = document.getElementById('automations-container');
+    container.innerHTML = '';
+    const cats = getCategories();
+
+    categoryOrder.forEach(catName => {
+        const items = cats[catName];
+        if (!items) return;
+
+        const section = document.createElement('div');
+        section.className = 'category';
+
+        const relevantCount = items.filter(a => a.enabled).length;
+
+        section.innerHTML = `
+            <div class="category-header">
+                <h2>${catName}</h2>
+                <span class="category-badge">${items.length} automations</span>
+            </div>
+            <div class="automation-table">
+                <div class="automation-row header">
+                    <div></div>
+                    <div>Automation</div>
+                    <div class="col-type">Type</div>
+                    <div class="col-freq">Freq / mois</div>
+                    <div class="col-time">Min / tache</div>
+                    <div style="text-align:right">Gain / mois</div>
+                </div>
+                ${items.map(a => `
+                    <div class="automation-row ${a.enabled ? '' : 'disabled'}" id="row-${a.id}">
+                        <input type="checkbox" ${a.enabled ? 'checked' : ''} onchange="toggleAutomation('${a.id}', this.checked)">
+                        <div>
+                            <div class="auto-name">${a.name}</div>
+                            <div class="auto-desc">${a.desc}</div>
+                        </div>
+                        <div class="col-type">
+                            <span class="auto-type-badge badge-${a.type}">${a.type}</span>
+                        </div>
+                        <div class="col-freq">
+                            <input type="number" class="num-input" id="freq-${a.id}" value="${a.defaultFreq}" min="0" max="999" oninput="recalculate()">
+                        </div>
+                        <div class="col-time">
+                            <input type="number" class="num-input" id="mins-${a.id}" value="${a.defaultMinutes}" min="0" max="999" oninput="recalculate()">
+                        </div>
+                        <div class="time-saved" id="saved-${a.id}">-</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(section);
+    });
+}
+
+function toggleAutomation(id, checked) {
+    const auto = automations.find(a => a.id === id);
+    auto.enabled = checked;
+    const row = document.getElementById(`row-${id}`);
+    row.classList.toggle('disabled', !checked);
+    recalculate();
+}
+
+function recalculate() {
+    const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+    const workDays = parseFloat(document.getElementById('workDays').value) || 21;
+
+    let totalMinutes = 0;
+    let activeCount = 0;
+
+    automations.forEach(a => {
+        const freq = parseFloat(document.getElementById(`freq-${a.id}`)?.value) || 0;
+        const mins = parseFloat(document.getElementById(`mins-${a.id}`)?.value) || 0;
+        const savedEl = document.getElementById(`saved-${a.id}`);
+
+        if (a.enabled) {
+            const saved = freq * mins;
+            totalMinutes += saved;
+            activeCount++;
+            const hours = saved / 60;
+            savedEl.textContent = hours >= 1 ? `${hours.toFixed(1)}h` : `${saved} min`;
+        } else {
+            savedEl.textContent = '-';
+        }
+    });
+
+    const totalHours = totalMinutes / 60;
+    const totalDays = totalHours / 8;
+    const monthlySavings = totalHours * hourlyRate;
+    const annualSavings = monthlySavings * 12;
+
+    document.getElementById('sum-active').textContent = activeCount;
+    document.getElementById('sum-hours').textContent = `${totalHours.toFixed(1)}h`;
+    document.getElementById('sum-days').textContent = `${totalDays.toFixed(1)}j`;
+    document.getElementById('sum-money').textContent = `${monthlySavings.toLocaleString('fr-CH')} CHF`;
+    document.getElementById('sum-annual').textContent = `${annualSavings.toLocaleString('fr-CH')} CHF`;
+}
+
+// Init
+renderAutomations();
+recalculate();
+</script>
+
+</body>
+</html>
