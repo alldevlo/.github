@@ -1,7 +1,7 @@
 # Email Draft - Pre-meeting prep for Covalo team
 
 **From:** charles@devlo.ch
-**To:** Yann Chilvers, Timo von Bargen, Alissa Arzner, Carlos Palminha
+**To:** yann.chilvers@covalo.com, timo.vonbargen@covalo.com, filipe.evora@covalo.com, thibault.firmin@covalo.com
 **Subject:** Wednesday meeting prep - Quick input needed from each of you
 
 ---
@@ -31,19 +31,21 @@ Could each of you take 5 minutes to jot down your top repetitive tasks? To help 
 - Writing internal comms and team updates
 - Reviewing contracts or partnership agreements
 
-### Alissa (Co-Founder)
-- Content creation -- blog posts, LinkedIn articles, newsletters
-- Drafting social media posts and event communications
-- Translating content between languages (EN/FR/DE/IT, especially since the Cosmetitrovo acquisition)
-- Monitoring competitive landscape and market trends
-- Preparing marketing materials for trade shows
+### Filipe (Senior Sales & Customer Success)
+- Writing outreach emails to brands and suppliers
+- Preparing demos and sales materials for prospects
+- Following up with leads and existing clients
+- Compiling client success reports and usage metrics
+- Onboarding new suppliers onto the platform
+- Answering repetitive client/supplier support questions
 
-### Carlos (Product & Engineering)
-- Writing and reviewing release notes / changelogs
-- Triaging support tickets and bug reports
-- Drafting technical documentation
-- Sprint review summaries and product updates
-- Screening and preparing for engineering candidate interviews
+### Thibault (Product Manager)
+- Writing PRDs, user stories, and acceptance criteria
+- Compiling sprint review summaries and product updates
+- Drafting release notes and changelogs
+- Triaging and prioritizing bug reports and feature requests
+- Preparing product metrics reports (usage, adoption, feature engagement)
+- Writing internal documentation for new features
 
 ---
 
