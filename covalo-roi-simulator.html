@@ -586,6 +586,173 @@ const automations = [
         enabled: false
     },
 
+    // === NEW: Covalo-specific automations ===
+    {
+        id: 'investor-update',
+        name: 'Investor Update',
+        desc: 'Generation du rapport mensuel/trimestriel investisseurs : KPIs, milestones, asks',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 1,
+        defaultMinutes: 180,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'board-deck',
+        name: 'Board Deck Prep',
+        desc: 'Preparation du deck pour le board : financials, roadmap, decisions cles',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 1,
+        defaultMinutes: 240,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'meeting-notes',
+        name: 'Meeting Notes & Actions',
+        desc: 'Resume automatique de reunions avec action items, owners et deadlines',
+        type: 'skill',
+        category: 'Reporting & Suivi',
+        defaultFreq: 15,
+        defaultMinutes: 15,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'job-description',
+        name: 'Job Description Generator',
+        desc: 'Redaction de fiches de poste structurees adaptees au contexte Covalo',
+        type: 'skill',
+        category: 'Recrutement & RH',
+        defaultFreq: 2,
+        defaultMinutes: 60,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'candidate-screening',
+        name: 'Candidate Screening',
+        desc: 'Pre-tri des CVs et profils LinkedIn avec scoring par rapport au poste',
+        type: 'skill',
+        category: 'Recrutement & RH',
+        defaultFreq: 10,
+        defaultMinutes: 20,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'interview-prep',
+        name: 'Interview Prep Brief',
+        desc: 'Brief pre-entretien : resume du candidat, questions cibles, red flags',
+        type: 'skill',
+        category: 'Recrutement & RH',
+        defaultFreq: 5,
+        defaultMinutes: 25,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'content-writer',
+        name: 'Content Writer',
+        desc: 'Redaction de blog posts, articles LinkedIn, newsletters sectorielles',
+        type: 'skill',
+        category: 'Marketing & Contenu',
+        defaultFreq: 4,
+        defaultMinutes: 90,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'social-media-posts',
+        name: 'Social Media Posts',
+        desc: 'Creation de posts LinkedIn/Twitter avec tone of voice adapte',
+        type: 'skill',
+        category: 'Marketing & Contenu',
+        defaultFreq: 8,
+        defaultMinutes: 20,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'competitive-intel',
+        name: 'Competitive Intelligence',
+        desc: 'Veille concurrentielle : nouveaux produits, levees de fonds, mouvements marche',
+        type: 'skill',
+        category: 'Marketing & Contenu',
+        defaultFreq: 2,
+        defaultMinutes: 60,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'supplier-onboarding',
+        name: 'Supplier Onboarding Brief',
+        desc: 'Generation du dossier d\'onboarding fournisseur : profil, produits, compliance',
+        type: 'skill',
+        category: 'Gestion de clients',
+        defaultFreq: 5,
+        defaultMinutes: 45,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'data-enrichment',
+        name: 'Data Enrichment',
+        desc: 'Enrichissement automatique des fiches fournisseurs/ingredients depuis sources publiques',
+        type: 'script',
+        category: 'Operations & IA',
+        defaultFreq: 10,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'translation',
+        name: 'Content Translation',
+        desc: 'Traduction de contenu plateforme, emails, docs (EN/FR/DE/IT) avec contexte metier',
+        type: 'skill',
+        category: 'Marketing & Contenu',
+        defaultFreq: 10,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'release-notes',
+        name: 'Release Notes Generator',
+        desc: 'Generation de release notes et changelogs depuis les commits/PRs',
+        type: 'command',
+        category: 'Operations & IA',
+        defaultFreq: 2,
+        defaultMinutes: 30,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'support-response',
+        name: 'Support Response Drafter',
+        desc: 'Brouillon de reponses support client/fournisseur avec contexte plateforme',
+        type: 'skill',
+        category: 'Gestion de clients',
+        defaultFreq: 20,
+        defaultMinutes: 10,
+        relevantForCovalo: true,
+        enabled: true
+    },
+    {
+        id: 'kpi-dashboard',
+        name: 'KPI Dashboard Update',
+        desc: 'Compilation automatique des metriques cles : MAU, GMV, NPS, churn, conversion',
+        type: 'command',
+        category: 'Reporting & Suivi',
+        defaultFreq: 4,
+        defaultMinutes: 45,
+        relevantForCovalo: true,
+        enabled: true
+    },
+
     // === SCRIPTS / WORKFLOWS ===
     {
         id: 'analyze-replies',
@@ -632,7 +799,7 @@ function getCategories() {
     return cats;
 }
 
-const categoryOrder = ['Ventes & Outbound', 'Reporting & Suivi', 'Gestion de clients', 'Operations & IA'];
+const categoryOrder = ['Ventes & Outbound', 'Reporting & Suivi', 'Gestion de clients', 'Recrutement & RH', 'Marketing & Contenu', 'Operations & IA'];
 
 function renderAutomations() {
     const container = document.getElementById('automations-container');
